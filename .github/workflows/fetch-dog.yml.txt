@@ -1,6 +1,7 @@
 name: GitHub Actions Demo
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+
 on: [push]
+
 jobs:
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
@@ -15,4 +16,16 @@ jobs:
       - name: List files in the repository
         run: |
           ls ${{ github.workspace }}
+      - name: Get current IP address
+        run: |
+          curl http://ipinfo.io/ip -o ip.txt
+      - name: Commit IP address file
+        run: |
+          git config --global user.email "action@github.com"
+          git config --global user.name "GitHub Action"
+          git add ip.txt
+          git commit -m "Add IP address" -a || echo "No changes to commit"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: echo "🍏 This job's status is ${{ job.status }}."
