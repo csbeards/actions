@@ -1,0 +1,26 @@
+name: Fetch Dog Image URL
+
+on:
+  schedule:
+    # Runs at the beginning of every hour
+    - cron: '0 * * * *'
+
+jobs:
+  fetch-dog-data:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Fetch Dog Image URL
+      run: |
+        curl -s https://dog.ceo/api/breeds/image/random > dogs.txt
+    
+    - name: Commit and push if there's a change
+      run: |
+        git config --global user.email "action@github.com"
+        git config --global user.name "GitHub Action"
+        git add dogs.txt
+        git commit -m "Update dog image URL" -a || echo "No changes to commit"
+        git push
